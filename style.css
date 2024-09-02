@@ -1,0 +1,50 @@
+﻿body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    border: 1px solid #ccc;
+}
+
+#mainMenu {
+    text-align: center;
+}
+
+.center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#kittenImage {
+    max-width: 50%;
+    height: auto;
+    margin-bottom: 20px; /* Space between the image and the heading */
+}
+
+#gameInstructions {
+    width: 100%;
+    max-width: 500px;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 20px; /* Space between the text and the button */
+    border-radius: 5px; /* Optional: Add rounded corners */
+    border: 1px solid #ccc; /* Optional: Add border */
+    background-color: #f9f9f9; /* Optional: Add background color */
+}
+
+.big-button {
+    padding: 20px 40px; /* Increase padding for a bigger button */
+    font-size: 20px; /* Increase font size */
+    border-radius: 10px; /* Optional: Add rounded corners */
+    background-color: #ff6347; /* Optional: Change background color */
+    color: white; /* Optional: Change text color */
+    border: none; /* Optional: Remove border */
+    cursor: pointer; /* Optional: Change cursor on hover */
+}
+
+    .big-button:hover {
+        background-color: #ff4500; /* Optional: Change background color on hover */
+    }

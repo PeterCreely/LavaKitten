@@ -21,65 +21,67 @@ function updatePlayerPosition() {
 
 let moveInterval;
 
-document.getElementById('leftButton').addEventListener('mousedown', () => {
+const leftButton = document.getElementById('leftButton');
+const rightButton = document.getElementById('rightButton');
+const upButton = document.getElementById('upButton');
+const downButton = document.getElementById('downButton');
+
+const startMovingLeft = () => {
     moveInterval = setInterval(() => {
         player.x -= 10;
         drawPlayer();
     }, 100); // Adjust the interval time as needed
-});
+};
 
-document.getElementById('leftButton').addEventListener('mouseup', () => {
-    clearInterval(moveInterval);
-});
-
-document.getElementById('leftButton').addEventListener('mouseleave', () => {
-    clearInterval(moveInterval);
-});
-
-document.getElementById('rightButton').addEventListener('mousedown', () => {
+const startMovingRight = () => {
     moveInterval = setInterval(() => {
         player.x += 10;
         drawPlayer();
     }, 100); // Adjust the interval time as needed
-});
+};
 
-document.getElementById('rightButton').addEventListener('mouseup', () => {
-    clearInterval(moveInterval);
-});
-
-document.getElementById('rightButton').addEventListener('mouseleave', () => {
-    clearInterval(moveInterval);
-});
-
-document.getElementById('upButton').addEventListener('mousedown', () => {
+const startMovingUp = () => {
     moveInterval = setInterval(() => {
         player.y -= 10;
         drawPlayer();
     }, 100); // Adjust the interval time as needed
-});
+};
 
-document.getElementById('upButton').addEventListener('mouseup', () => {
-    clearInterval(moveInterval);
-});
-
-document.getElementById('upButton').addEventListener('mouseleave', () => {
-    clearInterval(moveInterval);
-});
-
-document.getElementById('downButton').addEventListener('mousedown', () => {
+const startMovingDown = () => {
     moveInterval = setInterval(() => {
         player.y += 10;
         drawPlayer();
     }, 100); // Adjust the interval time as needed
-});
+};
 
-document.getElementById('downButton').addEventListener('mouseup', () => {
+const stopMoving = () => {
     clearInterval(moveInterval);
-});
+};
 
-document.getElementById('downButton').addEventListener('mouseleave', () => {
-    clearInterval(moveInterval);
-});
+leftButton.addEventListener('mousedown', startMovingLeft);
+leftButton.addEventListener('touchstart', startMovingLeft);
+
+rightButton.addEventListener('mousedown', startMovingRight);
+rightButton.addEventListener('touchstart', startMovingRight);
+
+upButton.addEventListener('mousedown', startMovingUp);
+upButton.addEventListener('touchstart', startMovingUp);
+
+downButton.addEventListener('mousedown', startMovingDown);
+downButton.addEventListener('touchstart', startMovingDown);
+
+leftButton.addEventListener('mouseup', stopMoving);
+leftButton.addEventListener('touchend', stopMoving);
+
+rightButton.addEventListener('mouseup', stopMoving);
+rightButton.addEventListener('touchend', stopMoving);
+
+upButton.addEventListener('mouseup', stopMoving);
+upButton.addEventListener('touchend', stopMoving);
+
+downButton.addEventListener('mouseup', stopMoving);
+downButton.addEventListener('touchend', stopMoving);
+
 
 
 let player = {
@@ -131,22 +133,6 @@ const collisionSound = new Audio('collision.mp3');
 moveSound.addEventListener('canplaythrough', () => console.log('Move sound loaded'));
 powerUpSound.addEventListener('canplaythrough', () => console.log('Power-up sound loaded'));
 collisionSound.addEventListener('canplaythrough', () => console.log('Collision sound loaded'));
-
-// Debounce function
-function debounce(func, delay) {
-    let timeoutId;
-    return function (...args) {
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-        }
-        timeoutId = setTimeout(() => {
-            func.apply(this, args);
-        }, delay);
-    };
-}
-
-// Debounced move sound play function
-const debouncedMoveSoundPlay = debounce(() => moveSound.play(), 200); // Adjust delay as needed
 
 function update() {
     console.log('Update function called');

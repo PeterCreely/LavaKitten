@@ -1,8 +1,86 @@
 ﻿const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-canvas.width = 800;
-canvas.height = 600;
+// Function to resize the canvas
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    // Redraw the canvas content after resizing
+    updatePlayerPosition();
+    draw(); // Call your draw function to redraw the content
+}
+
+// Event listener for window resize
+window.addEventListener('resize', resizeCanvas);
+
+function updatePlayerPosition() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+    ctx.drawImage(player.image, player.x, player.y, player.width, player.height); // Draw the player
+    console.log('updatePlayerPosition called:', player.x, player.y);
+}
+
+let moveInterval;
+
+document.getElementById('leftButton').addEventListener('mousedown', () => {
+    moveInterval = setInterval(() => {
+        player.x -= 10;
+        drawPlayer();
+    }, 100); // Adjust the interval time as needed
+});
+
+document.getElementById('leftButton').addEventListener('mouseup', () => {
+    clearInterval(moveInterval);
+});
+
+document.getElementById('leftButton').addEventListener('mouseleave', () => {
+    clearInterval(moveInterval);
+});
+
+document.getElementById('rightButton').addEventListener('mousedown', () => {
+    moveInterval = setInterval(() => {
+        player.x += 10;
+        drawPlayer();
+    }, 100); // Adjust the interval time as needed
+});
+
+document.getElementById('rightButton').addEventListener('mouseup', () => {
+    clearInterval(moveInterval);
+});
+
+document.getElementById('rightButton').addEventListener('mouseleave', () => {
+    clearInterval(moveInterval);
+});
+
+document.getElementById('upButton').addEventListener('mousedown', () => {
+    moveInterval = setInterval(() => {
+        player.y -= 10;
+        drawPlayer();
+    }, 100); // Adjust the interval time as needed
+});
+
+document.getElementById('upButton').addEventListener('mouseup', () => {
+    clearInterval(moveInterval);
+});
+
+document.getElementById('upButton').addEventListener('mouseleave', () => {
+    clearInterval(moveInterval);
+});
+
+document.getElementById('downButton').addEventListener('mousedown', () => {
+    moveInterval = setInterval(() => {
+        player.y += 10;
+        drawPlayer();
+    }, 100); // Adjust the interval time as needed
+});
+
+document.getElementById('downButton').addEventListener('mouseup', () => {
+    clearInterval(moveInterval);
+});
+
+document.getElementById('downButton').addEventListener('mouseleave', () => {
+    clearInterval(moveInterval);
+});
+
 
 let player = {
     x: 100,
@@ -14,12 +92,15 @@ let player = {
     image: new Image()
 };
 player.image.src = 'player.png'; // Path to your player image file
-player.image.onload = () => console.log('Player image loaded');
+player.image.onload = () => {
+    console.log('Player image loaded');
+    updatePlayerPosition(); // Initial call to position the player
+};
 
 let enemies = [
-    { x: 300, y: 300, width: 50, height: 50, speedX: 3, speedY: 3, image: new Image() },
-    { x: 500, y: 200, width: 50, height: 50, speedX: -3, speedY: 2, image: new Image() },
-    { x: 200, y: 400, width: 50, height: 50, speedX: 2, speedY: -3, image: new Image() }
+    { x: 100, y: 300, width: 50, height: 50, speedX: 3, speedY: 3, image: new Image() },
+    { x: 100, y: 200, width: 50, height: 50, speedX: -3, speedY: 2, image: new Image() },
+    { x: 100, y: 400, width: 50, height: 50, speedX: 2, speedY: -3, image: new Image() }
 ];
 enemies[0].image.src = 'enemy1.png'; // Path to your first enemy image file
 enemies[1].image.src = 'enemy2.png'; // Path to your second enemy image file
@@ -29,8 +110,8 @@ enemies.forEach((enemy, index) => {
 });
 
 let powerUps = [
-    { x: 400, y: 300, width: 50, height: 50, type: 'speed', image: new Image() },
-    { x: 600, y: 100, width: 50, height: 50, type: 'invincibility', image: new Image() }
+    { x: 200, y: 300, width: 50, height: 50, type: 'speed', image: new Image() },
+    { x: 200, y: 100, width: 50, height: 50, type: 'invincibility', image: new Image() }
 ];
 powerUps[0].image.src = 'speed.png';
 powerUps[1].image.src = 'invincibility.png';
@@ -50,6 +131,22 @@ const collisionSound = new Audio('collision.mp3');
 moveSound.addEventListener('canplaythrough', () => console.log('Move sound loaded'));
 powerUpSound.addEventListener('canplaythrough', () => console.log('Power-up sound loaded'));
 collisionSound.addEventListener('canplaythrough', () => console.log('Collision sound loaded'));
+
+// Debounce function
+function debounce(func, delay) {
+    let timeoutId;
+    return function (...args) {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+}
+
+// Debounced move sound play function
+const debouncedMoveSoundPlay = debounce(() => moveSound.play(), 200); // Adjust delay as needed
 
 function update() {
     console.log('Update function called');
@@ -110,8 +207,6 @@ function update() {
     }
 }
 
-
-
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -131,8 +226,8 @@ function draw() {
     // Draw score and level
     ctx.fillStyle = 'white';
     ctx.font = '20px Arial';
-    ctx.fillText('Score: ' + score, 10, 20);
-    ctx.fillText('Level: ' + level, 10, 50);
+    ctx.fillText('Score: ' + score, 20, 50);
+    ctx.fillText('Level: ' + level, 20, 70);
 }
 
 function isColliding(rect1, rect2) {
@@ -185,6 +280,7 @@ function addEnemy() {
     enemies.push(newEnemy);
     console.log(`New enemy added. Total enemies: ${enemies.length}`);
 }
+
 function applyPowerUp(powerUp) {
     if (powerUp.type === 'speed') {
         player.speed = 10;
@@ -195,17 +291,19 @@ function applyPowerUp(powerUp) {
     }
 }
 
+function startGame() {
+    console.log('startGame called');
+    document.getElementById('mainMenu').style.display = 'none';
+    document.getElementById('gameCanvas').style.display = 'block';
+    gameLoop();
+}
+
 function gameLoop() {
+    resizeCanvas();
     update();
     draw();
     requestAnimationFrame(gameLoop);
 }
 
-window.addEventListener('keydown', (e) => keys[e.key] = true);
-window.addEventListener('keyup', (e) => keys[e.key] = false);
-
-function startGame() {
-    document.getElementById('mainMenu').style.display = 'none';
-    document.getElementById('gameCanvas').style.display = 'block';
-    gameLoop();
-}
+// Start the game
+startGame();
